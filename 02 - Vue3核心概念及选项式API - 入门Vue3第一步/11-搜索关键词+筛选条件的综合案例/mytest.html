@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .active-gender {
+        background-color: pink;
+      }
+    </style>
+    <script src="../vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <input type="text" v-model="filterStr" placeholder="请输入查询条件" />
+      <button :class="activeGender('全部')" @click="handelGender('全部')">全部</button>
+      <button :class="activeGender('男')" @click="handelGender('男')">男</button>
+      <button :class="activeGender('女')" @click="handelGender('女')">女</button>
+      <ul>
+        <li v-for="item in filterList" :key="item.id">{{item.name}},{{item.gender}},{{item.age}}</li>
+      </ul>
+    </div>
+    <script>
+      let vm = Vue.createApp({
+        data() {
+          return {
+            filterStr: '',
+            currentGender: '全部',
+            list: []
+          }
+        },
+        methods: {
+          activeGender(gender) {
+            return this.currentGender === gender ? 'active-gender' : ''
+          },
+          handelGender(gender) {
+            this.currentGender = gender
+          }
+        },
+        computed: {
+          filterList() {
+            return this.list
+              .filter((item) => item.name.includes(this.filterStr))
+              .filter((item) => item.gender === this.currentGender || '全部' === this.currentGender)
+          }
+        },
+        watch: {},
+        created() {
+          fetch('./02-data.json')
+            .then((res) => res.json())
+            .then((res) => {
+              this.list = res
+            })
+        },
+        mounted() {},
+        updated() {}
+      })
+      vm.mount('#app')
+    </script>
+  </body>
+</html>

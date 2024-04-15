@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      {{ message.split(' ').reverse().join(' ') }}
+      <br />
+      {{ reverseMessageMethod() }}
+      <br />
+      {{ reverseMessageMethod() }}
+      <br />
+      {{ reverseMessage }}
+      <br />
+      {{ reverseMessage }}
+      <br />
+    </div>
+    <script>
+      let vm = Vue.createApp({
+        data() {
+          return {
+            message: 'hello world'
+          }
+        },
+        methods: {
+          reverseMessageMethod() {
+            console.log(1)
+            return this.message.split(' ').reverse().join(' ')
+          }
+        },
+        computed: {
+          /* reverseMessage(){
+          console.log(2);
+          return this.message.split(' ').reverse().join(' ');
+        } */
+          // 计算属性是一个属性、变量，在页面中直接插值表达式就行，只读属性
+          // 计算属性具备
+          // 1. 缓存性——计算属性会进行缓存，多次访问计算属性时，会立即返回之前计算好的结果，不会再次执行函数
+          // 2. 依赖收集——计算属性会基于它的依赖进行缓存，只有当计算属性依赖的属性值发生改变时，才会重新计算
+          // 3. 计算属性可以被监听
+          reverseMessage: {
+            set(value) {
+              this.message = value
+            },
+            get() {
+              return this.message.split(' ').reverse().join(' ')
+            }
+          }
+        }
+      }).mount('#app')
+
+      setTimeout(() => {
+        // vm.reverseMessage = 'hi vue'
+        vm.message = 'hi vue'
+      }, 2000)
+
+      // 计算属性在源码中的应用
+      let computed = {
+        num() {
+          return 123
+        }
+      }
+      let myVm = {}
+      for (let attr in computed) {
+        Object.defineProperty(myVm, attr, {
+          value: computed[attr]()
+        })
+      }
+      console.log(myVm)
+      console.log(myVm.num)
+      myVm.num = 567
+      console.log(myVm.num)
+    </script>
+  </body>
+</html>
