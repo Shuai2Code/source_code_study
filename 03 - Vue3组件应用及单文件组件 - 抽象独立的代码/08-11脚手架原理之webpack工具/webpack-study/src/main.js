@@ -1,0 +1,2 @@
+import str from './hello'
+console.log(str + 'world!!!')
